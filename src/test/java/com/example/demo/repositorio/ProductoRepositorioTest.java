@@ -75,9 +75,8 @@ public class ProductoRepositorioTest {
 
         List<Producto> productos1 = productoRepositorio.findBySede(sede);
         
-        assertThat(productos1).isNotNull();
-        assertThat(productos1.contains(producto));
-
+        assertThat(productos1).isNotNull(); 
+        assertThat(productos1.contains(producto));  
     }
     
 }

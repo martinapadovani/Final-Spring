@@ -42,6 +42,6 @@ public class Producto {
     Tipo tipo;
 
     @ManyToMany(mappedBy = "productos") //especifica el campo de la entidad propietaria (sede) que mapea la relacion
-    List<Sede> sede;
+    List<Sede> sedes;
     
 }

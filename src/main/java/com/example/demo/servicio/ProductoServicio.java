@@ -1,6 +1,7 @@
 package com.example.demo.servicio;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -8,15 +9,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.entidades.Producto;
+import com.example.demo.entidades.Sede;
+import com.example.demo.entidades.Tipo;
 import com.example.demo.repositorio.ProductoRepositorio;
+import com.example.demo.repositorio.SedeRepositorio;
 
 @Service
 public class ProductoServicio {
 
     @Autowired
     ProductoRepositorio productoRepositorio;
+
+    @Autowired
+    SedeRepositorio sedeRepositorio;
     
-    @Transactional /*indicar que e, método debe ser ejecutado dentro de una transacción. 
+    @Transactional /*indicar que el método debe ser ejecutado dentro de una transacción. 
     La transacción se utiliza indicar que la operacion deben completarse con éxito o no afectara la DB
     Si el método se ejecuta correctamente, la transacción se compromete; de lo contrario, 
     se realiza un rollback, deshaciendo/revirtiendo todas las operaciones realizadas en la transacción
@@ -33,13 +40,12 @@ public class ProductoServicio {
     }
 
     @Transactional
-    public void obtenerProductosPorSede(){
-
+    public List<Producto> obtenerProductosPorSede(Sede sede){
+        return productoRepositorio.findBySede(sede);
     }
 
     @Transactional
     public void obtenerProductosPorZona(){
-
         //  Que ponga una zona y le figure la sede mas cercana.
     }
 
@@ -49,17 +55,105 @@ public class ProductoServicio {
     }
 
     @Transactional
-    public void obtenerProductosPorTipo(){
-        
+    public List<Producto> obtenerProductosPorTipo(Tipo tipo){
+        return productoRepositorio.findByTipo(tipo);
     }
 
     @Transactional
-    public void actualizarProductos(){
+    public void establecerSede(String id, Sede sede){
 
+        Optional<Producto> productoOptional = productoRepositorio.findById(id);
+
+        Producto producto = productoOptional.get();
+
+        producto.getSedes().add(sede);
     }
 
     @Transactional
-    public void borrarProductos(){
+    public String actualizarProducto(
+    String id, 
+    String nombre,
+    int precioXKilo,
+    int tiempoDisponibilidad,
+    int stock){
+
+        Optional<Producto> productoOptional = productoRepositorio.findById(id);
+        if (productoOptional.isPresent()) {
+            Producto producto = productoOptional.get();
+            producto.setNombre(nombre);
+            producto.setPrecioXKilo(precioXKilo);
+            producto.setStock(stock);
+            producto.setTiempoDisponibilidad(tiempoDisponibilidad);
+            producto.setStock(stock);
+
+            productoRepositorio.save(producto);
+            return "Producto actualizado con éxito";
+        }
+        return "Error";
+    }
+
+    @Transactional
+    public String actualizarNombreProducto(String id, String nombre){
+
+        Optional<Producto> productoOptional = productoRepositorio.findById(id);
+        if (productoOptional.isPresent()) {
+            Producto producto = productoOptional.get();
+            producto.setNombre(nombre);
+
+            productoRepositorio.save(producto);
+            return "Producto actualizado con éxito";
+        }
+        return "Error";
+    }
+
+    @Transactional
+    public String actualizarPrecioProducto(String id, int precio){
+
+        Optional<Producto> productoOptional = productoRepositorio.findById(id);
+        if (productoOptional.isPresent()) {
+            Producto producto = productoOptional.get();
+            producto.setPrecioXKilo(precio);
+            
+            productoRepositorio.save(producto);
+            return "Producto actualizado con éxito";
+        }
+        return "Error";
+    }
+
+    @Transactional
+    public String actualizarDisponibilidadProducto(String id, int tiempoDisponibilidad){
+
+        Optional<Producto> productoOptional = productoRepositorio.findById(id);
+        if (productoOptional.isPresent()) {
+            Producto producto = productoOptional.get();
+            producto.setTiempoDisponibilidad(tiempoDisponibilidad);
+            
+            productoRepositorio.save(producto);
+            return "Producto actualizado con éxito";
+        }
+        return "Error";
+    }
+
+    @Transactional
+    public String actualizarStockProducto(String id, int stock){
+
+        Optional<Producto> productoOptional = productoRepositorio.findById(id);
+        if (productoOptional.isPresent()) {
+            Producto producto = productoOptional.get();
+            producto.setStock(stock);
+            
+            productoRepositorio.save(producto);
+            return "Producto actualizado con éxito";
+        }
+        return "Error";
+    }
+
+    @Transactional
+    public void borrarProductos(String id){
+
+        Optional<Producto> productoOptional = productoRepositorio.findById(id);
+        Producto producto = productoOptional.get();
+        productoRepositorio.delete(producto);
 
     }
 
