@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import org.hibernate.Hibernate;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -55,10 +56,13 @@ public class ProductoRepositorioTest {
         productos.add(producto);
         sedes.add(sede);
 
+        
+
         entityManager.persist(producto);
-        entityManager.persist(sedes);
-        entityManager.persist(productos);
-        entityManager.persist(sedes);
+        entityManager.persist(sede);
+        //Persisto las entidades principales
+        /*No es necesario persistir explícitamente las listas o las entidades relacionadas, ya que
+        Hibernate automáticamente manejará las asociaciones y persistirá las entidades relacionadas*/
     }
 
     @AfterEach

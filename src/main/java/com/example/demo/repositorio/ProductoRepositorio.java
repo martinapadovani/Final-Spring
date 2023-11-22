@@ -11,7 +11,7 @@ import com.example.demo.entidades.Producto;
 import com.example.demo.entidades.Sede;
 
 @Repository
-public interface ProductoRepositorio extends JpaRepository<Producto, Integer> {
+public interface ProductoRepositorio extends JpaRepository<Producto, String> {
 
     List<Producto> findBySede(Sede sede);
     

@@ -3,10 +3,14 @@ package com.example.demo.entidades;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+
+import org.hibernate.annotations.GenericGenerator;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -25,14 +29,18 @@ import lombok.ToString;
 public class Producto {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    String id;
+
     String nombre;
     int precioXKilo;
-    Tipo tipo;
     int tiempoDisponibilidad;
     int stock;
     
+    @Enumerated(EnumType.STRING)
+    Tipo tipo;
+
     @ManyToMany(mappedBy = "productos") //especifica el campo de la entidad propietaria (sede) que mapea la relacion
     List<Sede> sede;
     

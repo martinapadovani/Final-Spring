@@ -3,13 +3,18 @@ import java.util.List;
 import javax.annotation.Generated;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.print.DocFlavor.STRING;
 
+import org.hibernate.annotations.GenericGenerator;
+    
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -27,10 +32,14 @@ import lombok.ToString;
 @Entity
 public class Sede {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer idSede;
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    String id;
+
     String zona;
     String direccion;
+
+    @Enumerated(EnumType.STRING)
     Horarios horarioVenta;
     
     @ManyToMany(cascade = CascadeType.ALL) // significa que las operaciones de persistencia realizadas en la entidad Sede se propagarán a la entidad Producto y viceversa.
