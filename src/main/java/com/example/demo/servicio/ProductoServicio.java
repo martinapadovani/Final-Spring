@@ -1,5 +1,6 @@
 package com.example.demo.servicio;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.entidades.Producto;
 import com.example.demo.entidades.Sede;
-import com.example.demo.entidades.Tipo;
+import com.example.demo.enumeradores.Tipo;
 import com.example.demo.repositorio.ProductoRepositorio;
 import com.example.demo.repositorio.SedeRepositorio;
 
@@ -45,13 +46,23 @@ public class ProductoServicio {
     }
 
     @Transactional
-    public void obtenerProductosPorZona(){
-        //  Que ponga una zona y le figure la sede mas cercana.
+    public List<Producto> obtenerProductosPorZona(String zona){
+        return productoRepositorio.findBySedeZona(zona);
     }
 
     @Transactional
-    public void obtenerProductosPorPrecio(){
-
+    public List<Producto> obtenerProductosPorPrecio(int precioMenor, int precioMayor){
+        
+        List<Producto> productos = new ArrayList<>();
+        productos = (List<Producto>) productoRepositorio.findAll();
+        List<Producto> productosRango = new ArrayList<>();
+        for (Producto producto : productos) {
+            if (producto.getPrecioXKilo() >= precioMenor && producto.getPrecioXKilo() <= precioMayor) {
+                productosRango.add(producto);
+                return productosRango;
+            }
+        }
+        return productosRango;
     }
 
     @Transactional

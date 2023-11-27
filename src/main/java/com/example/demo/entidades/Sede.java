@@ -1,20 +1,19 @@
 package com.example.demo.entidades;
 import java.util.List;
-import javax.annotation.Generated;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.print.DocFlavor.STRING;
 
 import org.hibernate.annotations.GenericGenerator;
-    
+
+import com.example.demo.enumeradores.Horarios;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

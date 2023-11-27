@@ -13,11 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import static org.assertj.core.api.Assertions.assertThat;
 
-
-import com.example.demo.entidades.Horarios;
 import com.example.demo.entidades.Producto;
 import com.example.demo.entidades.Sede;
-import com.example.demo.entidades.Tipo;
+import com.example.demo.enumeradores.Horarios;
+import com.example.demo.enumeradores.Tipo;
 
 @DataJpaTest
 public class ProductoRepositorioTest {
