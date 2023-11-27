@@ -42,13 +42,13 @@ public class ProductoServicio {
 
     @Transactional
     public List<Producto> obtenerProductosPorSede(Sede sede){
-        return productoRepositorio.findBySede(sede);
+        return productoRepositorio.findBySedes(sede);
     }
 
-    @Transactional
-    public List<Producto> obtenerProductosPorZona(String zona){
-        return productoRepositorio.findBySedeZona(zona);
-    }
+    // @Transactional
+    // public List<Producto> obtenerProductosPorZona(String zona){
+    //     return productoRepositorio.findBySedeZona(zona);
+    // }
 
     @Transactional
     public List<Producto> obtenerProductosPorPrecio(int precioMenor, int precioMayor){

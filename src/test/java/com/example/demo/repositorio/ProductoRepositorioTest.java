@@ -50,7 +50,7 @@ public class ProductoRepositorioTest {
         producto.setTiempoDisponibilidad(23);
         producto.setTipo(Tipo.FRUTA);
         List<Sede> sedes = new ArrayList<>();
-        producto.setSede(sedes);
+       producto.setSedes(sedes);
 
         productos.add(producto);
         sedes.add(sede);
@@ -72,7 +72,7 @@ public class ProductoRepositorioTest {
     @Test
     public void testFindBySede(){
 
-        List<Producto> productos1 = productoRepositorio.findBySede(sede);
+        List<Producto> productos1 = productoRepositorio.findBySedes(sede);
         
         assertThat(productos1).isNotNull(); 
         assertThat(productos1.contains(producto));  

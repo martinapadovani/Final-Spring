@@ -12,8 +12,8 @@ import com.example.demo.enumeradores.Tipo;
 @Repository
 public interface ProductoRepositorio extends JpaRepository<Producto, String> {
 
-    List<Producto> findBySede(Sede sede);
+    List<Producto> findBySedes(Sede sede);
     List<Producto> findByTipo(Tipo tipo);
-    List<Producto> findBySedeZona(String zona);
+    //List<Producto> findBySedeZona(String zona);
     
 }
