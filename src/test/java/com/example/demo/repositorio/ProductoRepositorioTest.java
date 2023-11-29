@@ -29,7 +29,6 @@ public class ProductoRepositorioTest {
 
     Producto producto;
     Sede sede;
-    
 
     @BeforeEach
     public void setUp(){
@@ -50,12 +49,10 @@ public class ProductoRepositorioTest {
         producto.setTiempoDisponibilidad(23);
         producto.setTipo(Tipo.FRUTA);
         List<Sede> sedes = new ArrayList<>();
-       producto.setSedes(sedes);
+        producto.setSedes(sedes);
 
         productos.add(producto);
         sedes.add(sede);
-
-        
 
         entityManager.persist(producto);
         entityManager.persist(sede);
