@@ -14,6 +14,6 @@ public interface ProductoRepositorio extends JpaRepository<Producto, String> {
 
     List<Producto> findBySedes(Sede sede);
     List<Producto> findByTipo(Tipo tipo);
-    //List<Producto> findBySedeZona(String zona);
+    List<Producto> findBySedesZona(String zona);
     
 }
