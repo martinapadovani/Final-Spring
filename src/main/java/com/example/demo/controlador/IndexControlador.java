@@ -5,12 +5,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/sede")
-public class SedeControlador {
+@RequestMapping("/")
+public class IndexControlador {
 
-    @GetMapping()
+    @GetMapping("/")
     public String index(){
-        return "index-sede.html";
+        return "index.html";
     }
     
 }

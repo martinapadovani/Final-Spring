@@ -43,7 +43,7 @@ public class ProductoServicio {
     @Transactional
     public List<Producto> obtenerProductosPorSede(Sede sede){
         return productoRepositorio.findBySedes(sede);
-    }
+    }  
 
     // @Transactional
     // public List<Producto> obtenerProductosPorZona(String zona){
