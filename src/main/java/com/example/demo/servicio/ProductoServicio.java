@@ -21,12 +21,17 @@ import com.example.demo.repositorio.SedeRepositorio;
 @Service
 public class ProductoServicio {
 
+
     @Autowired
     ProductoRepositorio productoRepositorio;
 
     @Autowired
     SedeRepositorio sedeRepositorio;
     
+    public ProductoServicio(ProductoRepositorio productoRepositorio) {
+        this.productoRepositorio = productoRepositorio;
+    }
+
     @Transactional /*indicar que el método debe ser ejecutado dentro de una transacción. 
     La transacción se utiliza indicar que la operacion deben completarse con éxito o no afectara la DB
     Si el método se ejecuta correctamente, la transacción se compromete; de lo contrario, 
@@ -172,20 +177,33 @@ public class ProductoServicio {
     }
 
     @Transactional
-    public void borrarSiExcedioDisponibilidiad(String id){
+    public String borrarSiExcedioDisponibilidiad(String id){
 
         Optional<Producto> productoOptional = productoRepositorio.findById(id);
-        Producto producto = productoOptional.get();
 
-        LocalDate tiempoDisponible = producto.getTiempoDisponible();
-        LocalDate fechaActual = LocalDate.now();
+        if(productoOptional.isPresent()){
 
-        Period tiempoRestante = tiempoDisponible.until(fechaActual);
-        int dias = tiempoRestante.getDays();
+            Producto producto = productoOptional.get();
 
-        if (dias == 0) {
-            productoRepositorio.delete(producto);
+            LocalDate tiempoDisponible = producto.getTiempoDisponible();
+            LocalDate fechaActual = LocalDate.now();
+
+            Period tiempoRestante = fechaActual.until(tiempoDisponible);
+            int dias = tiempoRestante.getDays();
+
+            System.out.println(dias);
+
+            if (dias <= 0) {
+                productoRepositorio.delete(producto);
+
+                return "Producto Eliminado Exitosamente";
+            }
+
+            return "Todavia cumple dentro del plazo de disponibilidad";
+
         }
+
+        return "No se encontro en la DB";
 
     }
 }

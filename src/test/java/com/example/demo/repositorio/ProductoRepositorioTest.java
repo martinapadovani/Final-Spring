@@ -32,6 +32,7 @@ public class ProductoRepositorioTest {
     Producto producto;
     Sede sede;
     Sede sede1;
+    LocalDate tiempoDisponible;
 
     @BeforeEach
     public void setUp(){
@@ -54,7 +55,7 @@ public class ProductoRepositorioTest {
         producto.setNombre("tomate");
         producto.setPrecioXKilo(100);
         producto.setStock(435);
-        LocalDate tiempoDisponible = LocalDate.of(2023, Month.APRIL, 11);
+        tiempoDisponible = LocalDate.of(2023, Month.APRIL, 11);
         producto.setTiempoDisponible(tiempoDisponible);
         producto.setTipo(Tipo.FRUTA);
         List<Sede> sedes = new ArrayList<>();
