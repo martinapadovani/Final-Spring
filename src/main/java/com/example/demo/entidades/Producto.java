@@ -1,7 +1,9 @@
 package com.example.demo.entidades;
 
+import java.time.LocalDate;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -36,7 +38,10 @@ public class Producto {
 
     String nombre;
     int precioXKilo;
-    int tiempoDisponibilidad;
+
+    @Column
+    LocalDate tiempoDisponible;
+
     int stock;
     
     @Enumerated(EnumType.STRING)

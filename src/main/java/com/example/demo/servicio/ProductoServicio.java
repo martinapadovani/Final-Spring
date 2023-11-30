@@ -1,11 +1,14 @@
 package com.example.demo.servicio;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,10 +48,10 @@ public class ProductoServicio {
         return productoRepositorio.findBySedes(sede);
     }  
 
-    // @Transactional
-    // public List<Producto> obtenerProductosPorZona(String zona){
-    //     return productoRepositorio.findBySedeZona(zona);
-    // }
+    @Transactional
+    public List<Producto> obtenerProductosPorZona(String zona){
+        return productoRepositorio.findBySedesZona(zona);
+    }
 
     @Transactional
     public List<Producto> obtenerProductosPorPrecio(int precioMenor, int precioMayor){
@@ -85,7 +88,7 @@ public class ProductoServicio {
     String id, 
     String nombre,
     int precioXKilo,
-    int tiempoDisponibilidad,
+    LocalDate tiempoDisponible,
     int stock){
 
         Optional<Producto> productoOptional = productoRepositorio.findById(id);
@@ -94,7 +97,7 @@ public class ProductoServicio {
             producto.setNombre(nombre);
             producto.setPrecioXKilo(precioXKilo);
             producto.setStock(stock);
-            producto.setTiempoDisponibilidad(tiempoDisponibilidad);
+            producto.setTiempoDisponible(tiempoDisponible);
             producto.setStock(stock);
 
             productoRepositorio.save(producto);
@@ -132,12 +135,12 @@ public class ProductoServicio {
     }
 
     @Transactional
-    public String actualizarDisponibilidadProducto(String id, int tiempoDisponibilidad){
+    public String actualizarDisponibilidadProducto(String id, LocalDate tiempoDisponible){
 
         Optional<Producto> productoOptional = productoRepositorio.findById(id);
         if (productoOptional.isPresent()) {
             Producto producto = productoOptional.get();
-            producto.setTiempoDisponibilidad(tiempoDisponibilidad);
+            producto.setTiempoDisponible(tiempoDisponible);
             
             productoRepositorio.save(producto);
             return "Producto actualizado con éxito";
@@ -169,7 +172,20 @@ public class ProductoServicio {
     }
 
     @Transactional
-    public void borrarSiExcedioDisponibilidiad(){
+    public void borrarSiExcedioDisponibilidiad(String id){
+
+        Optional<Producto> productoOptional = productoRepositorio.findById(id);
+        Producto producto = productoOptional.get();
+
+        LocalDate tiempoDisponible = producto.getTiempoDisponible();
+        LocalDate fechaActual = LocalDate.now();
+
+        Period tiempoRestante = tiempoDisponible.until(fechaActual);
+        int dias = tiempoRestante.getDays();
+
+        if (dias == 0) {
+            productoRepositorio.delete(producto);
+        }
 
     }
 }
