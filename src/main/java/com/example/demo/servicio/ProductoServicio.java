@@ -81,7 +81,9 @@ public class ProductoServicio {
     @Transactional
     public List<Producto> obtenerProductosPorSede(String nombreSede){
 
-        Sede sede = sedeRepositorio.findByNombre(nombreSede);
+        Optional<Sede> sedeOptional = sedeRepositorio.findByNombre(nombreSede);
+
+        Sede sede = sedeOptional.get();
 
         if (!(nombreSede instanceof String) || nombreSede == null) {
             throw new BadRequestException("El tipo de sede no es válido. Sede: " + nombreSede);
@@ -222,39 +224,26 @@ public class ProductoServicio {
     }
 
     @Transactional
-    public String actualizarProducto(
-    String nombre,
-    String nuevoNombre,
-    Integer precioXKilo,
-    LocalDate tiempoDisponible,
-    Integer stock){
+    public String actualizarProducto(String nombre, Producto producto){
 
         if (!(nombre instanceof String) || nombre == null) {
             throw new BadRequestException("El valor del nombre no es válido. Se esperaba un String. Nombre: " + nombre);
-        }
-        if (!(precioXKilo instanceof Integer) || precioXKilo == null) {
-            throw new BadRequestException("El tipo de precio no es válido. Precio: " + precioXKilo);
-        }
-        if (!(tiempoDisponible instanceof LocalDate) || tiempoDisponible  == null) {
-            throw new BadRequestException("El tipo del valor tiempoDisponible no es válido. Recuerda que responde al formato año-mes-dia, en números. Tiempo Disponible: " + tiempoDisponible);
-        }
-        if (!(stock instanceof Integer) || stock  == null) {
-            throw new BadRequestException("El tipo de stock no es válido. Precio: " + stock);
         }
         if(productoRepositorio.findByNombre(nombre).isPresent()) {
             throw new NotFoundException("El producto solicitado no existe. Nombre: " + nombre);
         }
 
         Optional<Producto> productoOptional = productoRepositorio.findByNombre(nombre);
+        Producto productoDB = productoOptional.get();
+        Producto productoActualizado = producto;
+        
+        productoDB.setNombre(productoActualizado.getNombre());
+        productoDB.setPrecioXKilo(productoActualizado.getPrecioXKilo());
+        productoDB.setStock(productoActualizado.getStock());
+        productoDB.setTiempoDisponible(productoActualizado.getTiempoDisponible());
+        productoDB.setTipo(productoActualizado.getTipo());
 
-        Producto producto = productoOptional.get();
-        producto.setNombre(nuevoNombre);
-        producto.setPrecioXKilo(precioXKilo);
-        producto.setStock(stock);
-        producto.setTiempoDisponible(tiempoDisponible);
-        producto.setStock(stock);
-
-        productoRepositorio.save(producto);
+        productoRepositorio.save(productoDB);
         return "Producto actualizado con éxito";
     }
 

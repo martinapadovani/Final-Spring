@@ -13,6 +13,7 @@ import com.example.demo.entidades.Producto;
 import com.example.demo.entidades.Sede;
 import com.example.demo.repositorio.SedeRepositorio;
 import com.example.demo.servicio.ProductoServicio;
+import com.example.demo.servicio.SedeServicio;
 
 @RestController
 @RequestMapping("/")
@@ -22,7 +23,9 @@ public class ClienteControlador {
     ProductoServicio productoServicio;
 
     @Autowired
-    SedeRepositorio sedeRepositorio;
+    SedeServicio sedeServicio;
+
+    //PRODUCTOS
 
     @GetMapping("/productos")
     public List<Producto> obtenerProductos(){
@@ -35,8 +38,8 @@ public class ClienteControlador {
         return productoServicio.obtenerPorId(id);
     }
 
-    @GetMapping("/productos")
-    public List<Producto> obtenerProductosPorSede(@RequestBody String sede){
+    @GetMapping("/productos/{sede}")
+    public List<Producto> obtenerProductosPorSede(@PathVariable String sede){
 
         return productoServicio.obtenerProductosPorSede(sede);
     }
@@ -59,7 +62,22 @@ public class ClienteControlador {
         return productoServicio.obtenerProductosPorTipo(tipo);
     }
 
+    //SEDES
 
+    @GetMapping("/sedes")
+    public List<Sede> obtenerSedes(){
+        return sedeServicio.obtenerSedes();
+    }
+
+    @GetMapping("/sede/{id}")
+    public Sede obtenerSedePorId(@PathVariable String id){
+        return sedeServicio.obtenerSedePorId(id);
+    }
+
+    @GetMapping("/sedes/{zona}")
+    public List<Sede> obtenerSedesPorZona(@PathVariable String zona){
+        return sedeServicio.obtenerSedesPorZona(zona);
+    }
 
     
 }

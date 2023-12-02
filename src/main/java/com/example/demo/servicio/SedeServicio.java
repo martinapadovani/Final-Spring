@@ -41,7 +41,7 @@ public class SedeServicio {
     }
 
     @Transactional
-    public Optional<Sede> obtenerSedePorId(String id){
+    public Sede obtenerSedePorId(String id){
 
         if (!(id instanceof String) || id == null) {
             throw new BadRequestException("El tipo de ID no es válido. Se esperaba un String. ID: " + id);
@@ -50,7 +50,7 @@ public class SedeServicio {
             throw new NotFoundException("La sede solicitado no existe. ID: " + id);
         }
 
-        return sedeRepositorio.findById(id);
+        return sedeRepositorio.findById(id).get();
     }
 
     @Transactional
@@ -67,39 +67,25 @@ public class SedeServicio {
     }
 
     @Transactional
-    public String actualizarSede(String nombre, String nuevoNombre, String zona, String direccion, String horarioVenta){
+    public String actualizarSede(String nombre, Sede sede){
 
         if (!(nombre instanceof String) || nombre == null) {
             throw new BadRequestException("El valor del nombre no es válido. Nombre: " + nombre);
-        }
-        if (!(nuevoNombre instanceof String) || nuevoNombre == null) {
-            throw new BadRequestException("El tipo de nombre no es válido. Nombre: " + nuevoNombre);
-        }
-        if (!(zona instanceof String) || zona == null) {
-            throw new BadRequestException("El tipo de zona no es válida. Zona: " + zona);
-        }
-        if (!(direccion instanceof String) || direccion == null) {
-            throw new BadRequestException("El tipo de dirección no es válida. Dirección: " + direccion);
-        }
-        if (!(horarioVenta instanceof String) || horarioVenta == null) {
-            throw new BadRequestException("El tipo de horario no es válido. Horario: " + horarioVenta);
         }
         if(sedeRepositorio.findByNombre(nombre).isPresent()) {
             throw new NotFoundException("La sede solicitado no existe. Nombre: " + nombre);
         }
 
         Optional<Sede> sedeOptional = sedeRepositorio.findByNombre(nombre);
-        Sede sede = sedeOptional.get();
+        Sede sedeDB = sedeOptional.get();
+        Sede sedeActualizada = sede;
 
-        String horarioMayusculas = horarioVenta.toUpperCase();
-        Horarios horarioEnum = Horarios.valueOf(horarioMayusculas);
+        sedeDB.setNombre(sedeActualizada.getNombre());
+        sedeDB.setZona(sedeActualizada.getZona());
+        sedeDB.setDireccion(sedeActualizada.getDireccion());
+        sedeDB.setHorarioVenta(sede.getHorarioVenta());
 
-        sede.setNombre(nombre);
-        sede.setZona(zona);
-        sede.setDireccion(direccion);
-        sede.setHorarioVenta(horarioEnum);
-
-        sedeRepositorio.save(sede);
+        sedeRepositorio.save(sedeDB);
 
         return "Sede actualizada exitosamente!";
     }
