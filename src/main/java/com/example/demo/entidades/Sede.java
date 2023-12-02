@@ -35,6 +35,7 @@ public class Sede {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     String id;
 
+    String nombre;
     String zona;
     String direccion;
 

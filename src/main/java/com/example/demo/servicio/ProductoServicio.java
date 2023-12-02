@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.entidades.Producto;
 import com.example.demo.entidades.Sede;
+import com.example.demo.enumeradores.Horarios;
 import com.example.demo.enumeradores.Tipo;
 import com.example.demo.exception.exceptions.BadRequestException;
 import com.example.demo.exception.exceptions.NotFoundException;
@@ -40,8 +41,19 @@ public class ProductoServicio {
     Si se realizan varias operaciones en la DB dentro de una única transacción, y alguna de esas falla,
     las demás se revertirán.
     Garantiza la integridad de la DB y manttiene la consistencia de los datos*/
-    public void crearProducto(Producto producto){
-        productoRepositorio.save(producto);
+    public String agregarProducto(Producto producto){
+
+        if (!(producto instanceof Producto) || producto == null){
+            throw new BadRequestException("La sintaxis del producto ingresado es inválida. Producto: " + producto);
+        }
+
+        try{
+            productoRepositorio.save(producto);
+            return "Producto creado con éxito!";
+        }catch(Exception e){
+            return e.getMessage();
+        }
+        
     }
 
     @Transactional
@@ -59,8 +71,6 @@ public class ProductoServicio {
         if (!(id instanceof String) || id == null) {
             throw new BadRequestException("El tipo de ID no es válido. Se esperaba un String. ID: " + id);
         }
-
-        
         if(productoRepositorio.findById(id).isEmpty()) {
             throw new NotFoundException("El producto solicitado no existe. ID: " + id);
         }
@@ -159,21 +169,24 @@ public class ProductoServicio {
 
 
     @Transactional
-    public List<Producto> obtenerProductosPorTipo(Tipo tipo){
+    public List<Producto> obtenerProductosPorTipo(String tipo){
 
-        if (!(tipo instanceof Tipo) || tipo  == null) {
+        String tipoMayusculas = tipo.toUpperCase();
+        Tipo tipoEnum = Tipo.valueOf(tipoMayusculas);
+
+        if (!(tipo instanceof String) || tipo  == null) {
             throw new BadRequestException("El tipo no es válido. Tipo: " + tipo);
         }
         
-        if(productoRepositorio.findByTipo(tipo).isEmpty()) {
+        if(productoRepositorio.findByTipo(tipoEnum).isEmpty()) {
             throw new NotFoundException("No existe ningun producto del tipo indicado. Tipo: " + tipo);
         }
 
-        return productoRepositorio.findByTipo(tipo);
+        return productoRepositorio.findByTipo(tipoEnum);
     }
 
     @Transactional
-    public void establecerSede(String id, Sede sede){
+    public String establecerSede(String id, Sede sede){
 
         if (!(id instanceof String) || id  == null) {
             throw new BadRequestException("El tipo de ID no es válido. Se esperaba un String. ID: " + id);
@@ -200,6 +213,8 @@ public class ProductoServicio {
         }else{//Si ya tenia indicada al menos una Sede:
             producto.getSedes().add(sede);
         }
+
+        return "Sede establecida con éxito!";
         
     }
 
@@ -333,7 +348,7 @@ public class ProductoServicio {
     }
 
     @Transactional
-    public void borrarProducto(String id){
+    public String borrarProducto(String id){
 
         if (!(id instanceof String) || id == null) {
             throw new BadRequestException("El tipo de ID no es válido. Se esperaba un String. ID: " + id);
@@ -345,6 +360,8 @@ public class ProductoServicio {
         Optional<Producto> productoOptional = productoRepositorio.findById(id);
         Producto producto = productoOptional.get();
         productoRepositorio.delete(producto);
+
+        return "El producto " + producto.getNombre() + ", ha sido eliminado con éxito";
 
     }
 
@@ -372,7 +389,7 @@ public class ProductoServicio {
         if (dias <= 0) {
             productoRepositorio.delete(producto);
 
-            return "El tiempo disponible ha finalizado. Producto Eliminado Exitosamente";
+            return "El tiempo disponible ha finalizado. El producto " + producto.getNombre() + ", ha sido eliminado";
         }
 
         return "Se encuentra dentro del plazo de disponibilidad";
