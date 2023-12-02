@@ -1,6 +1,7 @@
 package com.example.demo.repositorio;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -15,5 +16,6 @@ public interface ProductoRepositorio extends JpaRepository<Producto, String> {
     List<Producto> findBySedes(Sede sede);
     List<Producto> findByTipo(Tipo tipo);
     List<Producto> findBySedesZona(String zona);
+    Optional<Producto> findByNombre(String nombre);
     
 }

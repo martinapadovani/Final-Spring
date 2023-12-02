@@ -5,6 +5,8 @@ import org.springframework.stereotype.Repository;
 
 import com.example.demo.entidades.Sede;
 import java.util.List;
+import java.util.Optional;
+
 import com.example.demo.entidades.Producto;
 
 
@@ -13,5 +15,6 @@ public interface SedeRepositorio extends JpaRepository<Sede, String> {
 
     List<Sede> findByProductos(Producto producto);
     List<Sede> findByZona(String zona);
+    Optional<Sede> findByNombre(String nombre);
     
 }

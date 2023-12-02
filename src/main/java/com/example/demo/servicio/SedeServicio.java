@@ -67,13 +67,13 @@ public class SedeServicio {
     }
 
     @Transactional
-    public String actualizarSede(String id, String nombre, String zona, String direccion, String horarioVenta){
+    public String actualizarSede(String nombre, String nuevoNombre, String zona, String direccion, String horarioVenta){
 
-        if (!(id instanceof String) || id == null) {
-            throw new BadRequestException("El tipo de ID no es válido. Se esperaba un String. ID: " + id);
-        }
         if (!(nombre instanceof String) || nombre == null) {
-            throw new BadRequestException("El tipo de nombre no es válido. Nombre: " + nombre);
+            throw new BadRequestException("El valor del nombre no es válido. Nombre: " + nombre);
+        }
+        if (!(nuevoNombre instanceof String) || nuevoNombre == null) {
+            throw new BadRequestException("El tipo de nombre no es válido. Nombre: " + nuevoNombre);
         }
         if (!(zona instanceof String) || zona == null) {
             throw new BadRequestException("El tipo de zona no es válida. Zona: " + zona);
@@ -84,11 +84,11 @@ public class SedeServicio {
         if (!(horarioVenta instanceof String) || horarioVenta == null) {
             throw new BadRequestException("El tipo de horario no es válido. Horario: " + horarioVenta);
         }
-        if(sedeRepositorio.findById(id).isEmpty()) {
-            throw new NotFoundException("La sede solicitado no existe. ID: " + id);
+        if(sedeRepositorio.findByNombre(nombre).isPresent()) {
+            throw new NotFoundException("La sede solicitado no existe. Nombre: " + nombre);
         }
 
-        Optional<Sede> sedeOptional = sedeRepositorio.findById(id);
+        Optional<Sede> sedeOptional = sedeRepositorio.findByNombre(nombre);
         Sede sede = sedeOptional.get();
 
         String horarioMayusculas = horarioVenta.toUpperCase();
@@ -105,19 +105,19 @@ public class SedeServicio {
     }
 
     @Transactional
-    public String actualizarNombre(String id, String nombre){
+    public String actualizarNombre(String nombre, String nuevoNombre){
 
-        if (!(id instanceof String) || id == null) {
-            throw new BadRequestException("El tipo de ID no es válido. Se esperaba un String. ID: " + id);
-        }
         if (!(nombre instanceof String) || nombre == null) {
-            throw new BadRequestException("El tipo de nombre no es válido. Nombre: " + nombre);
+            throw new BadRequestException("El valor del nombre no es válido. Nombre: " + nombre);
         }
-        if(sedeRepositorio.findById(id).isEmpty()) {
-            throw new NotFoundException("La sede solicitado no existe. ID: " + id);
+        if (!(nuevoNombre instanceof String) || nuevoNombre == null) {
+            throw new BadRequestException("El tipo de nombre no es válido. Nombre: " + nuevoNombre);
+        }
+        if(sedeRepositorio.findByNombre(nombre).isPresent()) {
+            throw new NotFoundException("La sede solicitado no existe. Nombre: " + nombre);
         }
 
-        Optional<Sede> sedeOptional = sedeRepositorio.findById(id);
+        Optional<Sede> sedeOptional = sedeRepositorio.findByNombre(nombre);
         Sede sede = sedeOptional.get();
 
         sede.setNombre(nombre);
@@ -127,19 +127,19 @@ public class SedeServicio {
     }
 
     @Transactional
-    public String actualizarZona(String id, String zona){
+    public String actualizarZona(String nombre, String zona){
 
-        if (!(id instanceof String) || id == null) {
-            throw new BadRequestException("El tipo de ID no es válido. Se esperaba un String. ID: " + id);
+        if (!(nombre instanceof String) || nombre == null) {
+            throw new BadRequestException("El valor del nombre no es válido. Nombre: " + nombre);
         }
         if (!(zona instanceof String) || zona == null) {
             throw new BadRequestException("El tipo de zona no es válida. Zona: " + zona);
         }
-        if(sedeRepositorio.findById(id).isEmpty()) {
-            throw new NotFoundException("La sede solicitado no existe. ID: " + id);
+        if(sedeRepositorio.findByNombre(nombre).isPresent()) {
+            throw new NotFoundException("La sede solicitado no existe. Nombre: " + nombre);
         }
 
-        Optional<Sede> sedeOptional = sedeRepositorio.findById(id);
+        Optional<Sede> sedeOptional = sedeRepositorio.findByNombre(nombre);
         Sede sede = sedeOptional.get();
 
         sede.setZona(zona);
@@ -149,19 +149,19 @@ public class SedeServicio {
     }
 
     @Transactional
-    public String actualizarDireccion(String id, String direccion){
+    public String actualizarDireccion(String nombre, String direccion){
 
-        if (!(id instanceof String) || id == null) {
-            throw new BadRequestException("El tipo de ID no es válido. Se esperaba un String. ID: " + id);
+        if (!(nombre instanceof String) || nombre == null) {
+            throw new BadRequestException("El valor del nombre no es válido. Nombre: " + nombre);
         }
         if (!(direccion instanceof String) || direccion == null) {
             throw new BadRequestException("El tipo de dirección no es válida. Dirección: " + direccion);
         }
-        if(sedeRepositorio.findById(id).isEmpty()) {
-            throw new NotFoundException("La sede solicitado no existe. ID: " + id);
+        if(sedeRepositorio.findByNombre(nombre).isPresent()) {
+            throw new NotFoundException("La sede solicitado no existe. Nombre: " + nombre);
         }
         
-        Optional<Sede> sedeOptional = sedeRepositorio.findById(id);
+        Optional<Sede> sedeOptional = sedeRepositorio.findByNombre(nombre);
         Sede sede = sedeOptional.get();
 
         sede.setDireccion(direccion);
@@ -171,19 +171,19 @@ public class SedeServicio {
     }
 
     @Transactional
-    public String actualizarHorario(String id, String horario){
+    public String actualizarHorario(String nombre, String horario){
 
-        if (!(id instanceof String) || id == null) {
-            throw new BadRequestException("El tipo de ID no es válido. Se esperaba un String. ID: " + id);
+        if (!(nombre instanceof String) || nombre == null) {
+            throw new BadRequestException("El valor del nombre no es válido. Nombre: " + nombre);
         }
         if (!(horario instanceof String) || horario == null) {
             throw new BadRequestException("El tipo de horario no es válido. Horario: " + horario);
         }
-        if(sedeRepositorio.findById(id).isEmpty()) {
-            throw new NotFoundException("La sede solicitado no existe. ID: " + id);
+        if(sedeRepositorio.findByNombre(nombre).isPresent()) {
+            throw new NotFoundException("La sede solicitado no existe. Nombre: " + nombre);
         }
 
-        Optional<Sede> sedeOptional = sedeRepositorio.findById(id);
+        Optional<Sede> sedeOptional = sedeRepositorio.findByNombre(nombre);
         Sede sede = sedeOptional.get();
 
         String horarioMayusculas = horario.toUpperCase();
@@ -196,16 +196,16 @@ public class SedeServicio {
     }
 
     @Transactional
-    public String borrarSede(String id){
+    public String borrarSede(String nombre){
 
-        if (!(id instanceof String) || id == null) {
-            throw new BadRequestException("El tipo de ID no es válido. Se esperaba un String. ID: " + id);
+        if (!(nombre instanceof String) || nombre == null) {
+            throw new BadRequestException("El valor del nombre no es válido. Nombre: " + nombre);
         }
-        if(sedeRepositorio.findById(id).isEmpty()) {
-            throw new NotFoundException("La sede solicitado no existe. ID: " + id);
+        if(sedeRepositorio.findByNombre(nombre).isPresent()) {
+            throw new NotFoundException("La sede solicitado no existe. Nombre: " + nombre);
         }
 
-        Optional<Sede> sedeOptional = sedeRepositorio.findById(id);
+        Optional<Sede> sedeOptional = sedeRepositorio.findByNombre(nombre);
         Sede sede = sedeOptional.get();
         sedeRepositorio.delete(sede);
 

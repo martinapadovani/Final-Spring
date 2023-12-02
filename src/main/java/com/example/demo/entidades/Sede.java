@@ -1,6 +1,7 @@
 package com.example.demo.entidades;
 import java.util.List;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -30,12 +31,15 @@ import lombok.ToString;
 @ToString
 @Entity
 public class Sede {
+    
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     String id;
 
+    @Column(unique = true)
     String nombre;
+
     String zona;
     String direccion;
 

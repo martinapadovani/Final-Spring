@@ -36,6 +36,7 @@ public class Producto {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     String id;
 
+    @Column(unique = true)
     String nombre;
     int precioXKilo;
 
