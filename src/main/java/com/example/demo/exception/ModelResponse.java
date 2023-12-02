@@ -15,7 +15,6 @@ import lombok.ToString;
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
-@Entity
 public class ModelResponse {
 
     private final String exception;
