@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.entidades.Producto;
 import com.example.demo.entidades.Sede;
+import com.example.demo.enumeradores.Tipo;
+import com.example.demo.exception.exceptions.BadRequestException;
 import com.example.demo.servicio.ProductoServicio;
 import com.example.demo.servicio.SedeServicio;
 
@@ -32,7 +35,13 @@ public class AdminControlador {
 
     @PostMapping("/producto")
     public String agregarProducto(@RequestBody Producto producto){
-        return productoServicio.agregarProducto(producto);
+
+        try {
+            return productoServicio.agregarProducto(producto);
+        } catch (HttpMessageNotReadableException e) {
+            // Manejar la excepción de deserialización aquí
+            return "Error en la deserialización del JSON: " + e.getMessage();
+        }
     }
     
     @PostMapping("/productos/sede/{nombreProducto}/{nombreSede}")

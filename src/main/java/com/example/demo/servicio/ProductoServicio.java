@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.entidades.Producto;
 import com.example.demo.entidades.Sede;
-import com.example.demo.enumeradores.Horarios;
 import com.example.demo.enumeradores.Tipo;
 import com.example.demo.exception.exceptions.BadRequestException;
 import com.example.demo.exception.exceptions.NotFoundException;
@@ -42,7 +41,7 @@ public class ProductoServicio {
     las demás se revertirán.
     Garantiza la integridad de la DB y manttiene la consistencia de los datos*/
     public String agregarProducto(Producto producto){
-
+        System.out.println("Ingreso al metodo");
 
         if(productoRepositorio.findByNombre(producto.getNombre()).isPresent()){
             throw new BadRequestException("Ya existe un producto con ese nombre! Nombre: " + producto.getNombre());
@@ -58,7 +57,17 @@ public class ProductoServicio {
         } 
         if (!(producto.getTiempoDisponible() instanceof LocalDate) || producto.getTiempoDisponible()  == null) {
             throw new BadRequestException("El tipo del valor tiempoDisponible no es válido. Tiempo Disponible: " + producto.getTiempoDisponible());
+        }        
+        if (producto.getTipo()  == null) {
+            throw new BadRequestException("El tipo no es válido. Tipo: " + producto.getTipo());
         }
+        // if(!(producto.getTipo() instanceof Tipo)){ //Seguro ingreso un string 
+        //     // System.out.println("Tomó la excepcion");
+        //     // Tipo tipoIngresado =  producto.getTipo();
+        //     // String tipoMayusculas = tipoIngresado.toString().toUpperCase();
+        //     // Tipo tipoEnum = Tipo.valueOf(tipoMayusculas);
+        //     // producto.setTipo(tipoEnum);  
+        // }
 
         try{
             productoRepositorio.save(producto);
