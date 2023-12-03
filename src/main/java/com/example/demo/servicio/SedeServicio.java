@@ -23,6 +23,28 @@ public class SedeServicio {
     @Transactional
     public String agregarSede(Sede sede){
 
+        if (!(sede.getNombre() instanceof String) || sede.getNombre() == null) {
+            throw new BadRequestException("El valor del nombre no es válido. Nombre: " + sede.getNombre());
+        }
+        if(sedeRepositorio.findByNombre(sede.getNombre()).isPresent()) {
+            throw new NotFoundException("Ya existe una sede con ese nombre! Nombre: " + sede.getNombre());
+        }
+        if (!(sede.getZona() instanceof String) || sede.getZona() == null) {
+            throw new BadRequestException("El tipo de zona no es válida. Zona: " + sede.getZona());
+        }
+        if (!(sede.getDireccion() instanceof String) || sede.getDireccion() == null) {
+            throw new BadRequestException("El tipo de dirección no es válida. Dirección: " + sede.getDireccion());
+        }
+        if (sede.getHorarioVenta() == null) {
+            throw new BadRequestException("El tipo de horario no es válido. Horario: " + sede.getHorarioVenta());
+        }
+
+        if (!(sede.getHorarioVenta() instanceof Horarios)) {
+            String horarioMayusculas = sede.getHorarioVenta().toString().toUpperCase();
+            Horarios horarioEnum = Horarios.valueOf(horarioMayusculas);
+            sede.setHorarioVenta(horarioEnum);
+        }
+
         try{
             sedeRepositorio.save(sede);
             return "Sede creada con éxito!";
@@ -72,7 +94,7 @@ public class SedeServicio {
         if (!(nombre instanceof String) || nombre == null) {
             throw new BadRequestException("El valor del nombre no es válido. Nombre: " + nombre);
         }
-        if(sedeRepositorio.findByNombre(nombre).isPresent()) {
+        if(!(sedeRepositorio.findByNombre(nombre).isPresent())) {
             throw new NotFoundException("La sede solicitado no existe. Nombre: " + nombre);
         }
 
@@ -99,7 +121,7 @@ public class SedeServicio {
         if (!(nuevoNombre instanceof String) || nuevoNombre == null) {
             throw new BadRequestException("El tipo de nombre no es válido. Nombre: " + nuevoNombre);
         }
-        if(sedeRepositorio.findByNombre(nombre).isPresent()) {
+        if(!(sedeRepositorio.findByNombre(nombre).isPresent())) {
             throw new NotFoundException("La sede solicitado no existe. Nombre: " + nombre);
         }
 
@@ -121,7 +143,7 @@ public class SedeServicio {
         if (!(zona instanceof String) || zona == null) {
             throw new BadRequestException("El tipo de zona no es válida. Zona: " + zona);
         }
-        if(sedeRepositorio.findByNombre(nombre).isPresent()) {
+        if(!(sedeRepositorio.findByNombre(nombre).isPresent())) {
             throw new NotFoundException("La sede solicitado no existe. Nombre: " + nombre);
         }
 
@@ -143,7 +165,7 @@ public class SedeServicio {
         if (!(direccion instanceof String) || direccion == null) {
             throw new BadRequestException("El tipo de dirección no es válida. Dirección: " + direccion);
         }
-        if(sedeRepositorio.findByNombre(nombre).isPresent()) {
+        if(!(sedeRepositorio.findByNombre(nombre).isPresent())) {
             throw new NotFoundException("La sede solicitado no existe. Nombre: " + nombre);
         }
         
@@ -165,7 +187,7 @@ public class SedeServicio {
         if (!(horario instanceof String) || horario == null) {
             throw new BadRequestException("El tipo de horario no es válido. Horario: " + horario);
         }
-        if(sedeRepositorio.findByNombre(nombre).isPresent()) {
+        if(!(sedeRepositorio.findByNombre(nombre).isPresent())) {
             throw new NotFoundException("La sede solicitado no existe. Nombre: " + nombre);
         }
 
@@ -187,7 +209,7 @@ public class SedeServicio {
         if (!(nombre instanceof String) || nombre == null) {
             throw new BadRequestException("El valor del nombre no es válido. Nombre: " + nombre);
         }
-        if(sedeRepositorio.findByNombre(nombre).isPresent()) {
+        if(!(sedeRepositorio.findByNombre(nombre).isPresent())) {
             throw new NotFoundException("La sede solicitado no existe. Nombre: " + nombre);
         }
 

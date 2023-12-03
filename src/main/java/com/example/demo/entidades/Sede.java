@@ -54,8 +54,8 @@ public class Sede {
     La declaracion con al antoacion no es obligatoria (JPA lo genera automaticamente) pero si recomendable 
     */
     name = "Producto_Sede", //Nombre de la tabla intermedia
-    joinColumns = @JoinColumn(name= "sede_id"), //Llave foranea que conecta a la tabla de la entidad propietaria de la relacion(sede)
-    inverseJoinColumns = @JoinColumn (name="producto_id") //Llave foranea que conecta a la tabla de la entidad inversa de la relacion (Producto)
+    joinColumns = @JoinColumn(name= "sede_nombre"), //Llave foranea que conecta a la tabla de la entidad propietaria de la relacion(sede)
+    inverseJoinColumns = @JoinColumn (name="producto_nombre") //Llave foranea que conecta a la tabla de la entidad inversa de la relacion (Producto)
     )
     List<Producto> productos;
     

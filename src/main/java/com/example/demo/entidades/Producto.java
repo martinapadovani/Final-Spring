@@ -38,12 +38,12 @@ public class Producto {
 
     @Column(unique = true)
     String nombre;
-    int precioXKilo;
+    Integer precioXKilo;
 
     @Column
     LocalDate tiempoDisponible;
 
-    int stock;
+    Integer stock;
     
     @Enumerated(EnumType.STRING)
     Tipo tipo;

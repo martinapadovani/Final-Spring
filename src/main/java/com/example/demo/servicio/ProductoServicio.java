@@ -43,8 +43,21 @@ public class ProductoServicio {
     Garantiza la integridad de la DB y manttiene la consistencia de los datos*/
     public String agregarProducto(Producto producto){
 
-        if (!(producto instanceof Producto) || producto == null){
-            throw new BadRequestException("La sintaxis del producto ingresado es inválida. Producto: " + producto);
+
+        if(productoRepositorio.findByNombre(producto.getNombre()).isPresent()){
+            throw new BadRequestException("Ya existe un producto con ese nombre! Nombre: " + producto.getNombre());
+        }
+        if(!(producto.getNombre() instanceof String || producto.getNombre() == null)){
+            throw new BadRequestException("El valor del nombre no es válido. Nombre: " + producto.getNombre());
+        }
+        if (!(producto.getPrecioXKilo() instanceof Integer) || producto.getPrecioXKilo() == null) {
+            throw new BadRequestException("El tipo de precio no es válido. Precio: " + producto.getPrecioXKilo());
+        }
+        if (!(producto.getStock() instanceof Integer) || producto.getStock()  == null) {
+            throw new BadRequestException("El tipo de stock no es válido. Precio: " + producto.getStock());
+        } 
+        if (!(producto.getTiempoDisponible() instanceof LocalDate) || producto.getTiempoDisponible()  == null) {
+            throw new BadRequestException("El tipo del valor tiempoDisponible no es válido. Tiempo Disponible: " + producto.getTiempoDisponible());
         }
 
         try{
@@ -191,23 +204,26 @@ public class ProductoServicio {
     }
 
     @Transactional
-    public String establecerSede(String nombre, Sede sede){
+    public String establecerSede(String nombreProducto, String nombreSede){
+            
+        Optional<Producto> productoOptional = productoRepositorio.findByNombre(nombreProducto);
+        Optional<Sede> sedeOptional = sedeRepositorio.findByNombre(nombreSede);
 
-        if (!(nombre instanceof String) || nombre  == null) {
-            throw new BadRequestException("El valor del nombre no es válido. Se esperaba un String. Nombre: " + nombre);
+        if (!(nombreProducto instanceof String) || nombreProducto  == null) {
+            throw new BadRequestException("El valor del nombre no es válido. Se esperaba un String. Nombre: " + nombreProducto);
         }
-        
-        if (!(sede instanceof Sede) || sede  == null) {
-            throw new BadRequestException("El tipo de sede no es válido. Sede: " + sede);
+        if (!(nombreSede instanceof String) || nombreSede  == null) {
+            throw new BadRequestException("El tipo de sede no es válido. Sede: " + nombreSede);
         }
-
-        if(productoRepositorio.findByNombre(nombre).isPresent()) {
-            throw new NotFoundException("El producto solicitado no existe. Nombre: " + nombre);
+        if (!(sedeOptional.isPresent())) {
+            throw new BadRequestException("No se encontro una sede bajo ese nombre. Sede: " + nombreSede);
         }
-
-        Optional<Producto> productoOptional = productoRepositorio.findByNombre(nombre);
+        if(!(sedeOptional.isPresent())) {
+            throw new NotFoundException("El producto solicitado no existe. Nombre: " + nombreProducto);
+        }
 
         Producto producto = productoOptional.get();
+        Sede sede = sedeOptional.get();
 
         if(producto.getSedes() == null){ //Si no tenia ninguna sede indicada
         
@@ -229,7 +245,7 @@ public class ProductoServicio {
         if (!(nombre instanceof String) || nombre == null) {
             throw new BadRequestException("El valor del nombre no es válido. Se esperaba un String. Nombre: " + nombre);
         }
-        if(productoRepositorio.findByNombre(nombre).isPresent()) {
+        if(!(productoRepositorio.findByNombre(nombre).isPresent())) {
             throw new NotFoundException("El producto solicitado no existe. Nombre: " + nombre);
         }
 
@@ -256,7 +272,7 @@ public class ProductoServicio {
         if (!(nuevoNombre instanceof String) || nuevoNombre == null) {
             throw new BadRequestException("El tipo del valor nombre no es válido. Se esperaba un String. Nombre: " + nuevoNombre);
         }
-        if(productoRepositorio.findByNombre(nombre).isPresent()) {
+        if(!(productoRepositorio.findByNombre(nombre).isPresent())) {
             throw new NotFoundException("El producto solicitado no existe. Nombre: " + nombre);
         }
 
@@ -275,7 +291,7 @@ public class ProductoServicio {
         if (!(nombre instanceof String) || nombre == null) {
             throw new BadRequestException("El tipo del valor nombre no es válido. Se esperaba un String. Nombre: " + nombre);
         }
-        if(productoRepositorio.findByNombre(nombre).isPresent()) {
+        if(!(productoRepositorio.findByNombre(nombre).isPresent())) {
             throw new NotFoundException("El producto solicitado no existe. Nombre: " + nombre);
         }
         if (!(precio instanceof Integer) || precio == null) {
@@ -296,7 +312,7 @@ public class ProductoServicio {
         if (!(nombre instanceof String) || nombre == null) {
             throw new BadRequestException("El tipo del valor nombre no es válido. Se esperaba un String. Nombre: " + nombre);
         }
-        if(productoRepositorio.findByNombre(nombre).isPresent()) {
+        if((!productoRepositorio.findByNombre(nombre).isPresent())) {
             throw new NotFoundException("El producto solicitado no existe. Nombre: " + nombre);
         }
         if (!(tiempoDisponible instanceof LocalDate) || tiempoDisponible  == null) {
@@ -319,7 +335,7 @@ public class ProductoServicio {
         if (!(nombre instanceof String) || nombre == null) {
             throw new BadRequestException("El valor del nombre no es válido. Se esperaba un String. Nombre: " + nombre);
         }
-        if(productoRepositorio.findByNombre(nombre).isPresent()) {
+        if(!(productoRepositorio.findByNombre(nombre).isPresent())) {
             throw new NotFoundException("El producto solicitado no existe. Nombre: " + nombre);
         }
         if (!(stock instanceof Integer) || stock  == null) {
@@ -342,7 +358,7 @@ public class ProductoServicio {
         if (!(nombre instanceof String) || nombre == null) {
             throw new BadRequestException("El valor del nombre no es válido. Se esperaba un String. Nombre: " + nombre);
         }
-        if(productoRepositorio.findByNombre(nombre).isPresent()) {
+        if(!(productoRepositorio.findByNombre(nombre).isPresent())) {
             throw new NotFoundException("El producto solicitado no existe. Nombre: " + nombre);
         }
 
@@ -360,7 +376,7 @@ public class ProductoServicio {
         if (!(nombre instanceof String) || nombre == null) {
             throw new BadRequestException("El valor del nombre no es válido. Se esperaba un String. Nombre: " + nombre);
         }
-        if(productoRepositorio.findByNombre(nombre).isPresent()) {
+        if(!(productoRepositorio.findByNombre(nombre).isPresent())) {
             throw new NotFoundException("El producto solicitado no existe. Nombre: " + nombre);
         }
 

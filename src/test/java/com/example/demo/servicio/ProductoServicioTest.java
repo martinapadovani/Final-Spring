@@ -87,14 +87,15 @@ public class ProductoServicioTest {
 
     @Test
     void establecerSede__Test(){ // Quiero verificar si es posible agregarle una sede a un producto que no tiene ninguna previamente 
-        when(productoRepositorio.findById("123")).thenReturn(Optional.of(p1));
+        when(productoRepositorio.findByNombre("tomate")).thenReturn(Optional.of(p1));
         
         Sede sede = new Sede();
+        sede.setNombre("Sucursal Belgrano");
         sede.setDireccion("Corrientes 166");
         sede.setHorarioVenta(Horarios.MAÑANA);
         sede.setZona("Tigre");
 
-        productoServicio.establecerSede("123", sede);
+        productoServicio.establecerSede("tomate", "Sucursal Belgrano");
     }
 
     @Test
