@@ -2,6 +2,7 @@ package com.example.demo.servicio;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +16,7 @@ import com.example.demo.entidades.Producto;
 import com.example.demo.entidades.Sede;
 import com.example.demo.enumeradores.Tipo;
 import com.example.demo.exception.exceptions.BadRequestException;
+import com.example.demo.exception.exceptions.ConflictException;
 import com.example.demo.exception.exceptions.NotFoundException;
 import com.example.demo.repositorio.ProductoRepositorio;
 import com.example.demo.repositorio.SedeRepositorio;
@@ -103,19 +105,15 @@ public class ProductoServicio {
     @Transactional
     public List<Producto> obtenerProductosPorSede(String nombreSede){
 
-        Optional<Sede> sedeOptional = sedeRepositorio.findByNombre(nombreSede);
-
-        Sede sede = sedeOptional.get();
-
         if (!(nombreSede instanceof String) || nombreSede == null) {
             throw new BadRequestException("El tipo de sede no es válido. Sede: " + nombreSede);
         }
 
-        if(productoRepositorio.findBySedes(sede).isEmpty()) {
-            throw new NotFoundException("No existe ningun producto asociado a esa sede. Sede: " + sede);
+        if(productoRepositorio.findBySedesNombre(nombreSede).isEmpty()) {
+            throw new NotFoundException("No existe ningun producto asociado a esa sede. Sede: " + nombreSede);
         }
 
-        return productoRepositorio.findBySedes(sede);
+        return productoRepositorio.findBySedesNombre(nombreSede);
     }  
 
     @Transactional
@@ -131,65 +129,64 @@ public class ProductoServicio {
         return productoRepositorio.findBySedesZona(zona);
     }
 
-    // @Transactional
-    // public List<Producto> obtenerProductosPorPrecio(int rango1, int rango2) {
-
-    //     List<Producto> productos = productoRepositorio.findAll();
-    //     List<Producto> productosRango = new ArrayList<>();
-
-    //     for (Producto producto : productos) {
-    //         if (producto.getPrecioXKilo() >= rango1 && producto.getPrecioXKilo() <= rango2) {
-    //             productosRango.add(producto);
-    //             return productosRango;
-    //         }
-    //     }
-    //     return productosRango;
-    // }
-
-
     @Transactional
     public List<Producto> obtenerProductosPorPrecio(Integer precioMenor, Integer precioMayor){
-        
-        List<Producto> productos = new ArrayList<>();
-        productos = (List<Producto>) productoRepositorio.findAll();
-        
-        List<Producto> productosRangoMayor = new ArrayList<>();
-        List<Producto> productosRangoMenor = new ArrayList<>();
 
         if (!(precioMayor instanceof Integer) || precioMayor == null) {
-            throw new BadRequestException("El tipo de precio no es válido. Precios: " + precioMenor);
+            throw new BadRequestException("El tipo de precio no es válido. Precio: " + precioMenor);
         }
-
         if (!(precioMenor instanceof Integer) || precioMenor == null) {
             throw new BadRequestException("El tipo de precio no es válido. Precio: " + precioMayor);
         }
-        
+
+        List<Producto> productos = productoRepositorio.findAll();
+
+        if (precioMayor < precioMenor) {
+            throw new BadRequestException("El rango de precios no es válido. Precio mayor no puede ser menor que precio menor.");
+        }
         if(productos.isEmpty()) {
             throw new NotFoundException("No se encontraron productos para filtrar");
         }
 
+        // List<Producto> productosRangoMayor = new ArrayList<>();
+        // List<Producto> productosRangoMenor = new ArrayList<>();
+
+        // for (Producto producto : productos) {
+        //     boolean esMenor = producto.getPrecioXKilo() <= precioMayor;
+        //     boolean esMayor = producto.getPrecioXKilo() >= precioMenor;
+
+        //     if (esMenor) {
+        //         if(!esMenor) {
+        //             throw new NotFoundException("No se encontraron productos con un menor precio al indicado. Precio: " + precioMenor);
+        //         }
+        //         productosRangoMenor.add(producto);
+
+        //     }if(esMayor){
+        //         if(!esMayor){
+        //             throw new NotFoundException("No se encontraron productos con un mayor precio al indicado. Precio: " + precioMayor);
+        //         }
+        //         productosRangoMayor.add(producto);
+        //     }
+        // }
+
+        // List<Producto> productosRango = new ArrayList<Producto>(){{
+        //     addAll(productosRangoMayor);
+        //     addAll(productosRangoMenor);
+        // }};
+
+        List<Producto> productosRango = new ArrayList<>();
+
         for (Producto producto : productos) {
-            boolean esMenor = producto.getPrecioXKilo() <= precioMayor;
-            boolean esMayor = producto.getPrecioXKilo() >= precioMenor;
-
-            if (esMenor) {
-                if(!esMenor) {
-                    throw new NotFoundException("No se encontraron productos con un menor precio al indicado. Precio: " + precioMenor);
-                }
-                productosRangoMenor.add(producto);
-
-            }if(esMayor){
-
-                if(!esMayor){
-                    throw new NotFoundException("No se encontraron productos con un mayor precio al indicado. Precio: " + precioMayor);
-                }
-                productosRangoMayor.add(producto);
+            int precioProducto = producto.getPrecioXKilo();
+        
+            if (precioProducto >= precioMenor && precioProducto <= precioMayor) {
+                productosRango.add(producto);
             }
         }
-        List<Producto> productosRango = new ArrayList<Producto>(){{
-            addAll(productosRangoMayor);
-            addAll(productosRangoMenor);
-        }};
+    
+        if (productosRango.isEmpty()) {
+            throw new NotFoundException("No se encontraron productos dentro del rango de precios indicado. Rango: " + precioMenor + " - " + precioMayor);
+        }
 
         return productosRango;
     }
@@ -227,26 +224,84 @@ public class ProductoServicio {
         if (!(sedeOptional.isPresent())) {
             throw new BadRequestException("No se encontro una sede bajo ese nombre. Sede: " + nombreSede);
         }
-        if(!(sedeOptional.isPresent())) {
+        if(!(productoOptional.isPresent())) {
             throw new NotFoundException("El producto solicitado no existe. Nombre: " + nombreProducto);
         }
 
         Producto producto = productoOptional.get();
         Sede sede = sedeOptional.get();
 
-        if(producto.getSedes() == null){ //Si no tenia ninguna sede indicada
-        
+        if(producto.getSedes().contains(sede)){
+            throw new ConflictException("La sede ingresada ya esta asignada al producto. Sede:  " + sede.getNombre() + ". Producto: " + producto.getNombre() );
+        }
+
+        if (producto.getSedes() != null && !producto.getSedes().isEmpty()) {
+            System.out.println("No estan vacias");
+            for (Sede sede1 : producto.getSedes()) {
+                // Log o imprime información sobre la sede antes de persistir
+                System.out.println("Sede: " + sede1.getNombre());
+            }
+        }
+
+        if(producto.getSedes() == null || producto.getSedes().isEmpty()){ //Si no tenia ninguna sede indicada
+
+            System.out.println("No tenia sedes previamente");
+
             List<Sede> sedes = new ArrayList<>(); //Debo crear la lista
             sedes.add(sede); // agrego la sede a la lista
             producto.setSedes(sedes); //seteo la lista
 
+            return "Sede establecida con éxito!";
+
         }else{//Si ya tenia indicada al menos una Sede:
+
+            System.out.println("Ya tenia sedes previamente");
             producto.getSedes().add(sede);
+
+            return "Sede establecida con éxito!";
+        }
+    }
+
+    @Transactional
+    public String sacarSede(String nombreProducto, String nombreSede){
+
+        Optional<Producto> productoOptional = productoRepositorio.findByNombre(nombreProducto);
+        Optional<Sede> sedeOptional = sedeRepositorio.findByNombre(nombreSede);
+
+        if (!(nombreProducto instanceof String) || nombreProducto  == null) {
+            throw new BadRequestException("El valor del nombre no es válido. Se esperaba un String. Nombre: " + nombreProducto);
+        }
+        if (!(nombreSede instanceof String) || nombreSede  == null) {
+            throw new BadRequestException("El tipo de sede no es válido. Sede: " + nombreSede);
+        }
+        if (!(sedeOptional.isPresent())) {
+            throw new BadRequestException("No se encontro una sede bajo ese nombre. Sede: " + nombreSede);
+        }
+        if(!(productoOptional.isPresent())) {
+            throw new NotFoundException("El producto solicitado no existe. Nombre: " + nombreProducto);
         }
 
-        return "Sede establecida con éxito!";
-        
+        Producto producto = productoOptional.get();
+        Sede sede = sedeOptional.get();
+
+        if(!(producto.getSedes().contains(sede))){
+            throw new ConflictException("El producto no se encuentra en la sede ingresada. Sede:  " + sede.getNombre() + ". Producto: " + producto.getNombre() );
+        }
+
+        List<Sede> sedes = producto.getSedes();
+        List<Sede> sedesActualizadas = new ArrayList<>();
+
+        for (Sede sede2 : sedes) {
+            if(!(sede2.getNombre() == sede.getNombre())){
+                sedesActualizadas.add(sede);
+            }
+        }
+
+        producto.setSedes(sedesActualizadas);
+
+        return "El producto ha sido desvinculado de la sede!";
     }
+
 
     @Transactional
     public String actualizarProducto(String nombre, Producto producto){
@@ -316,7 +371,7 @@ public class ProductoServicio {
     }
 
     @Transactional
-    public String actualizarDisponibilidadProducto(String nombre, LocalDate tiempoDisponible){
+    public String actualizarDisponibilidadProducto(String nombre, String tiempoDisponibleString){
 
         if (!(nombre instanceof String) || nombre == null) {
             throw new BadRequestException("El tipo del valor nombre no es válido. Se esperaba un String. Nombre: " + nombre);
@@ -324,11 +379,13 @@ public class ProductoServicio {
         if((!productoRepositorio.findByNombre(nombre).isPresent())) {
             throw new NotFoundException("El producto solicitado no existe. Nombre: " + nombre);
         }
-        if (!(tiempoDisponible instanceof LocalDate) || tiempoDisponible  == null) {
-            throw new BadRequestException("El tipo del valor tiempoDisponible no es válido. Tiempo Disponible: " + tiempoDisponible);
+        if (!(tiempoDisponibleString instanceof String) || tiempoDisponibleString  == null) {
+            throw new BadRequestException("El tipo del valor tiempoDisponible no es válido. Tiempo Disponible: " + tiempoDisponibleString);
         }
 
         Optional<Producto> productoOptional = productoRepositorio.findByNombre(nombre);
+        DateTimeFormatter formato = DateTimeFormatter.ofPattern("yyyy-MM-dd");//Especifico el formato esperado.
+        LocalDate tiempoDisponible = LocalDate.parse(tiempoDisponibleString, formato);//Transformo la fecha en string a LocalDate
 
         Producto producto = productoOptional.get();
         producto.setTiempoDisponible(tiempoDisponible);

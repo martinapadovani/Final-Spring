@@ -49,6 +49,11 @@ public class AdminControlador {
         return productoServicio.establecerSede(nombreProducto, nombreSede);
     }
 
+    @PutMapping("producto/sede/{nombreProducto}/{nombreSede}")
+    public String darDeBajaSede(@PathVariable String nombreProducto, @PathVariable String nombreSede){
+        return productoServicio.sacarSede(nombreProducto, nombreSede);
+    }
+
     @PutMapping("/producto/{nombre}")
     public String actualizarProducto(@PathVariable String nombre, @RequestBody Producto producto){
         return productoServicio.actualizarProducto(nombre, producto);
@@ -65,11 +70,11 @@ public class AdminControlador {
     }
 
     @PutMapping("/disponibilidad/{nombre}/{disponibilidad}")
-    public String actualizarDisponibilidadProducto(@PathVariable String nombre, @PathVariable LocalDate disponibilidad){
+    public String actualizarDisponibilidadProducto(@PathVariable String nombre, @PathVariable String disponibilidad){
         return productoServicio.actualizarDisponibilidadProducto(nombre, disponibilidad);
     }
 
-    @PutMapping("/stock{nombre}/{stock}")
+    @PutMapping("/stock/{nombre}/{stock}")
     public String actualizarStockProducto(@PathVariable String nombre, @PathVariable Integer stock){
         return productoServicio.actualizarStockProducto(nombre, stock);
     }
@@ -96,17 +101,17 @@ public class AdminControlador {
         return sedeServicio.actualizarNombre(nombre, nuevoNombre);
     }
 
-    @PutMapping("/sede/{nombre}/{zona}")
+    @PutMapping("/zona/{nombre}/{zona}")
     public String actualizarZonaSede(@PathVariable String nombre, @PathVariable String zona){
         return sedeServicio.actualizarZona(nombre, zona);
     }
 
-    @PutMapping("/sede/{nombre}/{direccion}")
+    @PutMapping("/direccion/{nombre}/{direccion}")
     public String actualizarDireccionSede(@PathVariable String nombre, @PathVariable String direccion){
         return sedeServicio.actualizarDireccion(nombre, direccion);
     }
 
-    @PutMapping("/sede/{nombre}/{horario}")
+    @PutMapping("/horario/{nombre}/{horario}")
     public String actualizarHorarioSede(@PathVariable String nombre, @PathVariable String horario){
         return sedeServicio.actualizarHorario(nombre, horario);
     }

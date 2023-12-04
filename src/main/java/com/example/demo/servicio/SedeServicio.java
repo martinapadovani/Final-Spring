@@ -102,11 +102,19 @@ public class SedeServicio {
         Sede sedeDB = sedeOptional.get();
         Sede sedeActualizada = sede;
 
-        sedeDB.setNombre(sedeActualizada.getNombre());
-        sedeDB.setZona(sedeActualizada.getZona());
-        sedeDB.setDireccion(sedeActualizada.getDireccion());
-        sedeDB.setHorarioVenta(sede.getHorarioVenta());
-
+        if(!(sedeActualizada.getNombre() == null)){ //Si lo deja en null es porque no quiere cambiarlo. En ese cambio no se actualiza.
+            sedeDB.setNombre(sedeActualizada.getNombre());
+        }
+        if(!(sedeActualizada.getZona() == null)){
+            sedeDB.setZona(sedeActualizada.getZona());
+        }
+       if(!(sedeActualizada.getDireccion() == null)){
+            sedeDB.setDireccion(sedeActualizada.getDireccion());
+       } 
+       if(!(sede.getHorarioVenta() == null)){
+            sedeDB.setHorarioVenta(sede.getHorarioVenta());
+       }
+    
         sedeRepositorio.save(sedeDB);
 
         return "Sede actualizada exitosamente!";

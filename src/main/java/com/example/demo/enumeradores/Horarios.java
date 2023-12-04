@@ -10,9 +10,9 @@ public enum Horarios {
     NOCHE;
 
     @JsonCreator
-    public static Tipo fromString(String horario) {
+    public static Horarios fromString(String horario) {
         try {
-            return Tipo.valueOf(horario.toUpperCase());
+            return Horarios.valueOf(horario.toUpperCase());
         } catch (Exception e) {
            throw new BadRequestException("El valor del horario no es válido. Horario: " + horario);
         }
