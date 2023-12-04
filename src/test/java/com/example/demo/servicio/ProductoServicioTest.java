@@ -106,7 +106,7 @@ public class ProductoServicioTest {
         when(productoRepositorio.findById("123")).thenReturn(Optional.of(p1));
         doNothing().when(productoRepositorio).deleteById(id);
         
-        String respuesta = productoServicio.borrarSiExcedioDisponibilidiad(id);
+        String respuesta = productoServicio.excedioDisponibilidad(id);
 
         // Verifica que se obtenga una respuesta
         assertThat(respuesta).isNotNull();
