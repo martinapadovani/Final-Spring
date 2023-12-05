@@ -30,10 +30,12 @@ public class SecurityConfig {
                         //Lo desactivamos ya que vamos a personalizar esta configuracion.
                         .csrf(csrf -> csrf
                                 .disable())
-
-                                .authorizeHttpRequests(authRequest -> authRequest
-                                .antMatchers("/cliente/**").permitAll()
-                                .anyRequest().authenticated())                            
+                                .authorizeRequests(authorizeRequests ->
+                                        authorizeRequests
+                                                .antMatchers("/cliente/**").permitAll()
+                                                .antMatchers("/auth/**").permitAll()
+                                                .anyRequest().authenticated()
+                                )
                         // desactivamos la autenticación propia de Sping Security mediante sesiones, para personalizar su config
                                 .sessionManagement(sessionManager -> sessionManager
                                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
