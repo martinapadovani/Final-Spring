@@ -72,7 +72,7 @@ public class ProductoServicioTest {
         autoCloseable.close();
     }
 
-    //No funciona xd
+
     @Test
     void obtenerProductoPorPrecioTest_Exitoso(){
 

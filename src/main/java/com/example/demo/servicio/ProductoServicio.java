@@ -438,7 +438,6 @@ public class ProductoServicio {
 
     @Transactional
     public String excedioDisponibilidad(String nombre){
-
         if (!(nombre instanceof String) || nombre == null) {
             throw new BadRequestException("El valor del nombre no es válido. Se esperaba un String. Nombre: " + nombre);
         }
@@ -450,20 +449,16 @@ public class ProductoServicio {
         Producto producto = productoOptional.get();
 
         LocalDate tiempoDisponible = producto.getTiempoDisponible();
-        //LocalDate fechaActual = LocalDate.now();
-        LocalDate fechaActual = LocalDate.of(2024, 01, 1);
+        LocalDate fechaActual = LocalDate.now();
+        //LocalDate fechaActual = LocalDate.of(2024, 01, 1);
 
         Period tiempoRestante = fechaActual.until(tiempoDisponible);
         int dias = tiempoRestante.getDays();
 
-        System.out.println(dias);
-
         if (dias <= 0) {
             productoRepositorio.delete(producto);
-
             return "El tiempo disponible ha finalizado. El producto " + producto.getNombre() + ", ha sido eliminado";
         }
-
         return "Se encuentra dentro del plazo de disponibilidad";
     }
 
@@ -471,7 +466,6 @@ public class ProductoServicio {
     public void borrarProductoSiExcedioDisponibilidad(){
 
         List<Producto> productos = productoRepositorio.findAll();
-
         for (Producto producto : productos) {
             excedioDisponibilidad(producto.getNombre());
         }

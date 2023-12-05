@@ -42,9 +42,6 @@ public class ProductoRepositorioTest {
         sede.setHorarioVenta(Horarios.MAÑANA);
         sede.setZona("Tigre");
 
-        List<Producto> productos = new ArrayList<>();
-        sede.setProductos(productos);
-
         sede1 = new Sede();
         sede.setDireccion("Rivadavia 2134");
         sede.setHorarioVenta(Horarios.NOCHE);
@@ -58,11 +55,14 @@ public class ProductoRepositorioTest {
         tiempoDisponible = LocalDate.of(2023, Month.APRIL, 11);
         producto.setTiempoDisponible(tiempoDisponible);
         producto.setTipo(Tipo.FRUTA);
-        List<Sede> sedes = new ArrayList<>();
-        producto.setSedes(sedes);
 
+        List<Producto> productos = new ArrayList<>();
         productos.add(producto);
+        sede.setProductos(productos);
+
+        List<Sede> sedes = new ArrayList<>();
         sedes.add(sede);
+        producto.setSedes(sedes);
 
         entityManager.persist(producto);
         entityManager.persist(sede);

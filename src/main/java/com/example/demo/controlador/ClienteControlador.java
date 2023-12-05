@@ -77,5 +77,4 @@ public class ClienteControlador {
         return sedeServicio.obtenerSedesPorZona(zona);
     }
 
-    
 }
