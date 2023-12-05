@@ -14,7 +14,7 @@ import com.example.demo.servicio.ProductoServicio;
 import com.example.demo.servicio.SedeServicio;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/cliente")
 public class ClienteControlador {
 
     @Autowired
